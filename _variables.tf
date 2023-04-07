@@ -3,9 +3,24 @@ variable "enabled" {
   default = true
 }
 
+variable "vpc_id" {
+  type        = string
+  description = "The ID of the VPC that the subnets belongs to."
+}
+
+variable "vpc_cidr_block" {
+  type        = string
+  description = "The CIDR block range of the VPC."
+}
+
+variable "vpc_subnet_ids" {
+  type        = list(any)
+  description = "List of both public and private (if any) subnet IDs."
+}
+
 variable "cluster_name" {
   type        = string
-  description = "The name of the EKS cluster"
+  description = "The name of the EKS cluster."
 }
 
 variable "cluster_identity_oidc_issuer" {
