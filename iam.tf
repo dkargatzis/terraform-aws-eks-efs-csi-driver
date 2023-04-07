@@ -1,3 +1,5 @@
+data "aws_caller_identity" "this" {}
+
 data "aws_iam_policy_document" "efs_csi_driver" {
   count = var.enabled ? 1 : 0
 
@@ -58,7 +60,9 @@ data "aws_iam_policy_document" "efs_csi_driver_assume" {
 
     principals {
       type        = "Federated"
-      identifiers = [var.cluster_identity_oidc_issuer_arn]
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.this.account_id}:oidc-provider/${replace(var.cluster_identity_oidc_issuer, "https://", "")}"
+      ]
     }
 
     condition {
