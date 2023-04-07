@@ -8,6 +8,11 @@ resource "helm_release" "kubernetes_efs_csi_driver" {
   namespace  = var.namespace
 
   set {
+    name  = "replicaCount"
+    value = 1
+  }
+
+  set {
     name  = "controller.serviceAccount.create"
     value = "true"
   }
