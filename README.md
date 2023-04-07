@@ -3,7 +3,7 @@
 [![Lint Status](https://github.com/DNXLabs/terraform-aws-eks-efs-csi-driver/workflows/Lint/badge.svg)](https://github.com/DNXLabs/terraform-aws-eks-efs-csi-driver/actions)
 [![LICENSE](https://img.shields.io/github/license/DNXLabs/terraform-aws-eks-efs-csi-driver)](https://github.com/DNXLabs/terraform-aws-eks-efs-csi-driver/blob/master/LICENSE)
 
-Terraform module for deploying [aws-efs-csi-driver](https://github.com/kubernetes-sigs/aws-efs-csi-driver)  inside a pre-existing EKS cluster.
+Terraform module for deploying [aws-efs-csi-driver](https://github.com/kubernetes-sigs/aws-efs-csi-driver) inside a pre-existing EKS cluster and creating an EFS file system in AWS.
 
 The [Amazon Elastic File System](https://aws.amazon.com/efs/) Container Storage Interface (CSI) Driver implements the [CSI](https://github.com/container-storage-interface/spec/blob/master/spec.md) specification for container orchestrators to manage the lifecycle of Amazon EFS file systems.
 
@@ -12,6 +12,9 @@ The [Amazon Elastic File System](https://aws.amazon.com/efs/) Container Storage 
 module "efs_csi_driver" {
   source = "git::https://github.com/DNXLabs/terraform-aws-eks-efs-csi-driver.git"
 
+  vpc_id                           = module.vpc.vpc_id
+  vpc_cidr_block                   = module.vpc.vpc_cidr_block
+  vpc_subnet_ids                   = module.vpc.public_subnet_ids
   cluster_name                     = module.eks_cluster.cluster_id
   cluster_identity_oidc_issuer     = module.eks_cluster.cluster_oidc_issuer_url
   cluster_identity_oidc_issuer_arn = module.eks_cluster.oidc_provider_arn
@@ -22,8 +25,9 @@ module "efs_csi_driver" {
 Before the example, you need to:
 
 - Get yourself familiar with how to setup Kubernetes on AWS and how to create EFS file system.
-- When creating EFS file system, make sure it is accessible from Kubernetes cluster. This can be achieved by creating the file system inside the same VPC as Kubernetes cluster or using VPC peering.
-- Install EFS CSI driver using this module.
+- Install EFS CSI driver and create an EFS file system and its storage class using this module.
+
+**_Note: Make sure that the EFS file system is accessible from Kubernetes cluster. This can be achieved by creating the file system inside the same VPC as Kubernetes cluster or using VPC peering._**
 
 #### Example links
 - [Static provisioning](https://github.com/kubernetes-sigs/aws-efs-csi-driver/blob/master/examples/kubernetes/static_provisioning/README.md)
@@ -83,7 +87,9 @@ Encryption in transit is enabled by default in the master branch version of the 
 
 ## Outputs
 
-No output.
+| Name               | Description                                           |   Type   |
+|--------------------|-------------------------------------------------------|:--------:|
+| efs_file_system_id | The id of the EFS file system created by this module. | `string` |
 
 <!--- END_TF_DOCS --->
 
