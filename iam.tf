@@ -59,7 +59,7 @@ data "aws_iam_policy_document" "efs_csi_driver_assume" {
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
     principals {
-      type        = "Federated"
+      type = "Federated"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.this.account_id}:oidc-provider/${replace(var.cluster_identity_oidc_issuer, "https://", "")}"
       ]
