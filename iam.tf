@@ -29,6 +29,19 @@ data "aws_iam_policy_document" "efs_csi_driver" {
 
   statement {
     actions = [
+      "elasticfilesystem:TagResource"
+    ]
+    resources = ["*"]
+    effect    = "Allow"
+    condition {
+      test     = "StringLike"
+      variable = "aws:RequestTag/efs.csi.aws.com/cluster"
+      values   = ["true"]
+    }
+  }
+
+  statement {
+    actions = [
       "elasticfilesystem:DeleteAccessPoint"
     ]
     resources = ["*"]
@@ -67,7 +80,7 @@ data "aws_iam_policy_document" "efs_csi_driver_assume" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(var.cluster_identity_oidc_issuer, "https://", "")}:sub"
+      variable = "${replace(var.cluster_identity_oidc_issuer_arn, "https://", "")}:sub"
 
       values = [
         "system:serviceaccount:${var.namespace}:${var.service_account_name}",
