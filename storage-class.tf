@@ -11,6 +11,7 @@ parameters:
   fileSystemId: ${aws_efs_file_system.efs.id}
   basePath: "/dynamic_provisioning"
   directoryPerms: "700"
+  uid: "0"
 YAML
   depends_on = [helm_release.kubernetes_efs_csi_driver]
 }
