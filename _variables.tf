@@ -53,7 +53,7 @@ variable "helm_chart_repo" {
 
 variable "helm_chart_version" {
   type        = string
-  default     = "2.2.0"
+  default     = "3.0.7"
   description = "Amazon EFS CSI Driver chart version."
 }
 
